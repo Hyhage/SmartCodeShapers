@@ -48,7 +48,7 @@ export default function Home() {
             href="/transcribe" 
             className="px-6 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
           >
-            Speech to Text Converter
+            Candidate Job Matcher
           </Link>
           <Link 
             href="/api/hello" 

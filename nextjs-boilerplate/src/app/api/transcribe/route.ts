@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { saveFile, deleteFile } from '@/lib/formidable';
-import { transcribeAudio } from '@/lib/openai';
+import { transcribeAudio, CandidateInfo, transformToJobSearchRequest, JobSearchRequest } from '@/lib/openai';
 
 // Configure the API route
 export const runtime = 'nodejs';
@@ -37,16 +37,23 @@ export async function POST(req: NextRequest) {
     // Save the file to disk
     filePath = await saveFile(file);
 
-    // Transcribe the audio
-    const transcription = await transcribeAudio(filePath);
+    // Transcribe the audio and extract candidate info
+    const result = await transcribeAudio(filePath);
 
     // Clean up: delete the file after transcription
     if (filePath) {
       await deleteFile(filePath);
     }
 
-    // Return the transcription
-    return NextResponse.json({ transcription });
+    // Transform candidate info to job search request
+    const jobSearchRequest = transformToJobSearchRequest(result.candidateInfo);
+
+    // Return the transcription, candidate info, and job search request
+    return NextResponse.json({
+      transcription: result.transcription,
+      candidateInfo: result.candidateInfo,
+      jobSearchRequest
+    });
   } catch (error) {
     console.error('Error processing audio:', error);
     

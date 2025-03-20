@@ -17,7 +17,7 @@ A full-stack Next.js boilerplate with TypeScript, Tailwind CSS, API routes, and 
 - TypeScript for type safety
 - Environment variable support
 - File upload handling
-- Speech-to-text conversion using OpenAI's Whisper API
+- Speech-to-text conversion using OpenAI's Whisper API with automatic language detection for Dutch and English
 
 ## Project Structure
 
@@ -99,9 +99,11 @@ nextjs-boilerplate/
 This boilerplate includes a speech-to-text conversion feature using OpenAI's Whisper API:
 
 1. Navigate to `/transcribe` in your browser
-2. Upload an MP3 audio file
+2. Upload an MP3 audio file (in either Dutch or English)
 3. Click "Transcribe Audio" to convert the speech to text
 4. View the transcribed text in the result section
+
+The system automatically detects whether the audio is in Dutch or English and transcribes it accordingly. No language selection is required from the user.
 
 The API endpoint for this feature is available at `/api/transcribe` and accepts POST requests with form data containing an audio file.
 
