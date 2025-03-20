@@ -110,6 +110,7 @@ export default function TranscribePage() {
     setIsLoading(true);
     setError('');
     setTranscription('');
+    setJobSearchResponse(null);
 
     try {
       const formData = new FormData();
@@ -129,6 +130,11 @@ export default function TranscribePage() {
       setTranscription(data.transcription);
       setCandidateInfo(data.candidateInfo || { function: '', location: '' });
       setJobSearchRequest(data.jobSearchRequest || null);
+      
+      // Set job search response if available
+      if (data.jobSearchResponse) {
+        setJobSearchResponse(data.jobSearchResponse);
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {
@@ -210,7 +216,7 @@ export default function TranscribePage() {
               disabled={!file || isLoading}
               className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {isLoading ? 'Transcribing...' : 'Transcribe Audio'}
+              {isLoading ? 'Processing...' : 'Transcribe & Find Jobs'}
             </button>
             <button
               type="button"
@@ -256,15 +262,17 @@ export default function TranscribePage() {
                     {JSON.stringify(jobSearchRequest, null, 2)}
                   </pre>
                 </div>
-                <div className="mt-4">
-                  <button
-                    onClick={handleSearch}
-                    disabled={isSearching}
-                    className="bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    {isSearching ? 'Searching...' : 'Search for Jobs'}
-                  </button>
-                </div>
+                {!jobSearchResponse && (
+                  <div className="mt-4">
+                    <button
+                      onClick={handleSearch}
+                      disabled={isSearching}
+                      className="bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {isSearching ? 'Searching...' : 'Search for Jobs Manually'}
+                    </button>
+                  </div>
+                )}
               </div>
             )}
             
@@ -317,7 +325,7 @@ export default function TranscribePage() {
             GPT to extract job function and location from candidate recordings.
           </p>
           <p className="mt-2">
-            The extracted information is used to create a job search request for the AccentJobs API.
+            The extracted information is automatically used to search for matching jobs using the AccentJobs API.
             The system automatically detects whether your audio is in Dutch or English.
           </p>
           <p className="mt-2">

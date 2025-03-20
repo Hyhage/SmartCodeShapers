@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { saveFile, deleteFile } from '@/lib/formidable';
 import { transcribeAudio, CandidateInfo, transformToJobSearchRequest, JobSearchRequest } from '@/lib/openai';
+import { searchJobs } from '@/lib/jobSearch';
 
 // Configure the API route
 export const runtime = 'nodejs';
@@ -47,12 +48,22 @@ export async function POST(req: NextRequest) {
 
     // Transform candidate info to job search request
     const jobSearchRequest = transformToJobSearchRequest(result.candidateInfo);
+    
+    // Perform job search
+    let jobSearchResponse = null;
+    try {
+      jobSearchResponse = await searchJobs(jobSearchRequest);
+    } catch (searchError) {
+      console.error('Error searching for jobs:', searchError);
+      // Continue even if job search fails
+    }
 
-    // Return the transcription, candidate info, and job search request
+    // Return the transcription, candidate info, job search request, and job search response
     return NextResponse.json({
       transcription: result.transcription,
       candidateInfo: result.candidateInfo,
-      jobSearchRequest
+      jobSearchRequest,
+      jobSearchResponse
     });
   } catch (error) {
     console.error('Error processing audio:', error);
