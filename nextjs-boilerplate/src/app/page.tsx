@@ -40,6 +40,24 @@ export default function Home() {
           </ul>
         </div>
       </div>
+
+      <div className="mt-10 flex flex-col items-center">
+        <h2 className="text-2xl font-semibold mb-4">Demo Applications</h2>
+        <div className="flex gap-4">
+          <Link 
+            href="/transcribe" 
+            className="px-6 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+          >
+            Speech to Text Converter
+          </Link>
+          <Link 
+            href="/api/hello" 
+            className="px-6 py-3 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition-colors"
+          >
+            Sample API
+          </Link>
+        </div>
+      </div>
     </main>
   );
 }

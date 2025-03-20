@@ -9,6 +9,11 @@ const nextConfig = {
   // Environment variables
   env: {
     API_URL: process.env.API_URL || 'http://localhost:3000/api',
+    OPENAI_API_KEY: process.env.OPENAI_API_KEY || '',
+  },
+  // API configuration in experimental
+  experimental: {
+    serverComponentsExternalPackages: ['formidable'],
   },
 };
 
