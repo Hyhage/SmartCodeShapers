@@ -13,10 +13,13 @@ export default function Home() {
       <header className="w-full accent-header flex justify-center py-4 backdrop-blur-lg">
         <div className="container mx-auto flex justify-between items-center px-6">
           <div className="flex items-center space-x-2">
-            <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center subtle-rotate">
-              <span className="text-2xl font-bold gradient-text">A</span>
+            <div className="h-10 w-auto">
+              <img
+                src="/accent-logo.png"
+                alt="Accent"
+                className="h-full w-auto object-contain"
+              />
             </div>
-            <span className="text-xl font-bold text-white">Accent</span>
           </div>
 
           <nav className="hidden md:flex space-x-8">
@@ -177,8 +180,12 @@ export default function Home() {
           <div className="grid md:grid-cols-4 gap-8">
             <div className="md:col-span-1">
               <div className="flex items-center space-x-2 mb-4">
-                <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center">
-                  <span className="text-xl font-bold gradient-text">A</span>
+                <div className="h-8 w-auto">
+                  <img
+                    src="/accent-logo.png"
+                    alt="Accent"
+                    className="h-full w-auto object-contain"
+                  />
                 </div>
                 <span className="text-lg font-bold">Accent</span>
               </div>

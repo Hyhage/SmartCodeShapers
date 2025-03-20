@@ -191,10 +191,10 @@ const mockJobs: Job[] = [
 ];
 
 /**
- * Mock function to simulate sending audio data to a server and receiving job matches
+ * Function to send audio data to the transcription server
  * @param audioBlob - The audio blob to send
  * @param metadata - Optional metadata about the audio
- * @returns Promise that resolves with job matches or rejects with an error
+ * @returns Promise that resolves with response from the server or rejects with an error
  */
 export const sendAudioToServer = async (
   audioBlob: Blob,
@@ -205,26 +205,47 @@ export const sendAudioToServer = async (
     size?: number;
   } = {}
 ): Promise<{ success: boolean; message: string; id?: string }> => {
-  // Simulate network delay
-  await new Promise((resolve) => setTimeout(resolve, 1500));
+  try {
+    // Create a FormData object to send the audio file
+    const formData = new FormData();
+    formData.append("audio", audioBlob, metadata.fileName || "audio.mp3");
 
-  console.log("Audio received by mock server:", {
-    blobSize: `${(audioBlob.size / 1024).toFixed(2)} KB`,
-    blobType: audioBlob.type,
-    metadata,
-  });
+    // Add metadata as additional form fields if needed
+    if (metadata.duration)
+      formData.append("duration", metadata.duration.toString());
+    if (metadata.format) formData.append("format", metadata.format);
+    if (metadata.size) formData.append("size", metadata.size.toString());
 
-  // Simulate successful upload 95% of the time
-  if (Math.random() > 0.05) {
-    const mockId = `audio_${Date.now()}_${Math.floor(Math.random() * 1000)}`;
+    console.log("Sending audio to transcription server:", {
+      blobSize: `${(audioBlob.size / 1024).toFixed(2)} KB`,
+      blobType: audioBlob.type,
+      metadata,
+    });
+
+    // Send the audio to the real API endpoint
+    const response = await fetch(
+      "https://e693-194-78-234-130.ngrok-free.app/transcribe",
+      {
+        method: "POST",
+        body: formData,
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(
+        `Server error: ${response.status} ${response.statusText}`
+      );
+    }
+
+    const result = await response.json();
     return {
       success: true,
       message: "Audio successfully processed and stored",
-      id: mockId,
+      id: result.id || `audio_${Date.now()}`,
     };
-  } else {
-    // Simulate occasional server error
-    throw new Error("Server error: Could not process audio");
+  } catch (error) {
+    console.error("Error sending audio to server:", error);
+    throw error;
   }
 };
 

@@ -122,20 +122,38 @@ const WebcamRecorder: React.FC = () => {
     <div className="flex flex-col items-center gap-6 p-8">
       {!recordedVideo ? (
         <div className="w-full">
-          <div className="relative w-full max-w-3xl mx-auto overflow-hidden rounded-2xl">
+          <div className="relative w-full max-w-md mx-auto overflow-hidden rounded-3xl aspect-[9/16] bg-black">
+            {/* Main webcam with vertical aspect ratio */}
             <Webcam
               audio={true}
               ref={webcamRef}
-              width={1280}
-              height={720}
+              width={1080}
+              height={1920}
               videoConstraints={{
-                width: 1280,
-                height: 720,
+                width: 1080,
+                height: 1920,
                 facingMode: "user",
               }}
               onUserMedia={handleUserMedia}
-              className="w-full rounded-2xl shadow-lg"
+              className="w-full h-full object-cover rounded-3xl shadow-lg"
             />
+
+            {/* Recruiter video in top right corner */}
+            <div className="absolute top-4 right-4 w-28 h-36 rounded-2xl overflow-hidden border-2 border-white shadow-lg">
+              <video
+                src="/recruiter-video.mp4"
+                autoPlay
+                muted
+                loop
+                playsInline
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/70 to-transparent py-1">
+                <p className="text-white text-xs text-center font-medium">
+                  Recruiter
+                </p>
+              </div>
+            </div>
 
             {/* Overlay elements */}
             {countdown !== null && (
@@ -148,6 +166,48 @@ const WebcamRecorder: React.FC = () => {
               </div>
             )}
 
+            {/* FaceTime-like UI elements */}
+            <div className="absolute bottom-8 left-0 right-0 flex justify-center">
+              <div className="bg-black bg-opacity-40 backdrop-blur-md px-6 py-3 rounded-full flex items-center gap-6">
+                <button className="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-5 w-5 text-white"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
+                    <path d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" />
+                    <path d="M14 6a2 2 0 012-2h2a2 2 0 012 2v8a2 2 0 01-2 2h-2a2 2 0 01-2-2V6z" />
+                  </svg>
+                </button>
+                <button className="w-12 h-12 rounded-full bg-red-500 flex items-center justify-center">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-6 w-6 text-white"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
+                    <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
+                    <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
+                  </svg>
+                </button>
+                <button className="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-5 w-5 text-white"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm3 2h6v4H7V5zm8 8v2h1v-2h-1zm-2-8h1V5h-1v2zm-2 8h1v-2h-1v2zM9 5h1V3H9v2zm6 5a1 1 0 100-2 1 1 0 000 2z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </button>
+              </div>
+            </div>
+
             {recording && (
               <div className="absolute top-0 inset-x-0 p-4 flex justify-between items-center bg-gradient-to-b from-black/50 to-transparent">
                 <div className="flex items-center gap-2 bg-black bg-opacity-50 backdrop-blur-md px-4 py-2 rounded-full">
@@ -158,7 +218,7 @@ const WebcamRecorder: React.FC = () => {
                 </div>
                 <button
                   onClick={stopRecording}
-                  className="px-4 py-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition font-medium flex items-center gap-2 backdrop-blur-md"
+                  className="w-10 h-10 bg-red-500 text-white rounded-full hover:bg-red-600 transition flex items-center justify-center backdrop-blur-md"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -172,7 +232,6 @@ const WebcamRecorder: React.FC = () => {
                       clipRule="evenodd"
                     />
                   </svg>
-                  Stop
                 </button>
               </div>
             )}
@@ -223,15 +282,32 @@ const WebcamRecorder: React.FC = () => {
               Your Video Application
             </h3>
 
-            <div className="relative rounded-xl overflow-hidden shadow-xl">
+            <div className="relative rounded-3xl overflow-hidden shadow-xl aspect-[9/16] max-w-md mx-auto">
               <video
                 src={recordedVideo}
                 controls
-                width={1280}
-                height={720}
-                className="w-full rounded-xl"
+                width={1080}
+                height={1920}
+                className="w-full h-full object-cover rounded-3xl"
               />
               <div className="absolute bottom-0 inset-x-0 h-16 bg-gradient-to-t from-black/50 to-transparent pointer-events-none"></div>
+
+              {/* Recruiter video in top right corner */}
+              <div className="absolute top-4 right-4 w-28 h-36 rounded-2xl overflow-hidden border-2 border-white shadow-lg">
+                <video
+                  src="/recruiter-video.mp4"
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/70 to-transparent py-1">
+                  <p className="text-white text-xs text-center font-medium">
+                    Recruiter
+                  </p>
+                </div>
+              </div>
             </div>
 
             <div className="mt-8 flex flex-wrap gap-4 justify-center">
